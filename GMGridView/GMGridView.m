@@ -1397,11 +1397,12 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         
         if ((forceLoad || !NSLocationInRange(positionToLoad, loadedPositionsRange)) && positionToLoad < _numberTotalItems) 
         {
-            if (![self cellForItemAtIndex:positionToLoad]) 
-            {
-                GMGridViewCell *cell = [self newItemSubViewForPosition:positionToLoad];
-                [self addSubview:cell];
+            GMGridViewCell *cell = [self cellForItemAtIndex:positionToLoad];
+            if (cell) {
+                [cell removeFromSuperview];
+                [self queueReusableCell:cell];
             }
+            [self addSubview:[self newItemSubViewForPosition:positionToLoad]];
         }
     }    
 }
