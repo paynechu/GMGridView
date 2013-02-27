@@ -1598,7 +1598,21 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
                 targetRect.origin.y = MAX((CGFloat)floorf(gridRect.origin.y - (targetRect.size.height - gridRect.size.height)), 0.0);
                 break;
         }
+    } else {
+        CGPoint originScroll = CGPointZero;
+        
+        CGSize pageSize =  CGSizeMake(self.bounds.size.width  - self.contentInset.left - self.contentInset.right,
+                                      self.bounds.size.height - self.contentInset.top  - self.contentInset.bottom);
+        
+        CGFloat pageX = floorf(origin.x / pageSize.width);
+        CGFloat pageY = floorf(origin.y / pageSize.height);
+        
+        originScroll = CGPointMake(pageX * pageSize.width,
+                                   pageY * pageSize.height);
+        
+        targetRect = CGRectMake(originScroll.x, originScroll.y, pageSize.width, pageSize.height);
     }
+
     
     // Better performance animating ourselves instead of using animated:YES in scrollRectToVisible
     [UIView animateWithDuration:animated ? kDefaultAnimationDuration : 0
